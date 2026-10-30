@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carbon Coach 🌿 | AI Sustainability Assistant</title>
+  <meta name="description" content="Conversational carbon footprint coach for students, families, and campuses built with Google ADK for Python and Gemini.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="header">
+    <div class="brand">
+      <div class="brand-icon">🌿</div>
+      <div>
+        <h1 class="brand-title">Carbon Coach</h1>
+      </div>
+      <span class="brand-badge">Google ADK</span>
+    </div>
+
+    <div class="header-actions">
+      <div class="status-pill" id="agentStatusPill">
+        <span class="pulse-dot"></span>
+        <span id="agentModelText">Gemini 2.5 Flash • Active</span>
+      </div>
+
+      <button class="btn-icon theme-toggle-btn" id="btnThemeToggle" title="Toggle Light / Dark Mode" aria-label="Toggle Dark and White mode">
+        <span id="themeToggleIcon">☀️</span> <span id="themeToggleText">Light Mode</span>
+      </button>
+
+      <button class="btn-icon" id="btnLeaderboard">
+        <span>🏆</span> Campus Board
+      </button>
+
+      <button class="btn-icon" id="btnResetSession" title="Reset Session State">
+        <span>🔄</span> New Session
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="dashboard-container">
+    
+    <!-- Left Column: Metrics, Gauge, Categories & Activity Log -->
+    <section class="overview-panel" aria-label="Footprint Overview">
+      
+      <!-- Hero Carbon Gauge Card -->
+      <article class="glass-card hero-gauge-card">
+        <div class="gauge-wrapper">
+          <svg class="gauge-svg" viewBox="0 0 220 220">
+            <circle class="gauge-bg" cx="110" cy="110" r="88" />
+            <circle class="gauge-progress" id="carbonGaugeCircle" cx="110" cy="110" r="88" />
+          </svg>
+          <div class="gauge-center-text">
+            <span class="gauge-val" id="todayTotalVal">0.00</span>
+            <span class="gauge-unit">kg CO₂e</span>
+            <span class="gauge-sub">Today's Footprint</span>
+          </div>
+        </div>
+
+        <div class="gauge-stats">
+          <div class="gauge-status-badge" id="gaugeStatusBadge">
+            <span>🌱</span> <span id="gaugeStatusText">Eco-Friendly & Safe</span>
+          </div>
+          <h2 class="gauge-headline" id="gaugeHeadline">Clean and sustainable day!</h2>
+          <p class="gauge-desc" id="gaugeDesc">
+            Log your daily travel, AC, meals, or waste. The everyday target for a sustainable life in India is <strong>5.0 kg CO₂e per day</strong>.
+          </p>
+
+          <div>
+            <div class="benchmark-labels">
+              <span>0 kg</span>
+              <span id="benchmarkLabelText">Daily Target: 5.0 kg</span>
+              <span>10 kg</span>
+            </div>
+            <div class="benchmark-bar-container">
+              <div class="benchmark-bar-fill" id="benchmarkBarFill"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Real-World Nature Impact Card -->
+      <article class="glass-card nature-card" id="natureImpactCard">
+        <div class="nature-header">
+          <div class="nature-title">
+            <span>🌍</span> <strong>How Your Actions Affect Nature</strong>
+          </div>
+          <span class="nature-pill" id="naturePill">Healthy Planet Target</span>
+        </div>
+        <p class="nature-lead" id="natureLeadText">
+          Every kilogram of carbon you prevent keeps our city air cleaner, cuts harmful smog (PM2.5), and helps trees and wildlife thrive.
+        </p>
+        <div class="nature-equivalents-grid">
+          <div class="nature-equiv-item">
+            <span class="equiv-icon">🌳</span>
+            <div>
+              <div class="equiv-val" id="treesAbsorbVal">0.1 trees</div>
+              <div class="equiv-label">Month of tree absorption</div>
+            </div>
+          </div>
+          <div class="nature-equiv-item">
+            <span class="equiv-icon">📱</span>
+            <div>
+              <div class="equiv-val" id="phonesChargedVal">0 charges</div>
+              <div class="equiv-label">Smartphone battery charges</div>
+            </div>
+          </div>
+          <div class="nature-equiv-item">
+            <span class="equiv-icon">🍃</span>
+            <div>
+              <div class="equiv-val" id="cleanAirScore">Fresh & Clean</div>
+              <div class="equiv-label">Neighborhood air impact</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4 Category Cards -->
+      <section class="category-grid" aria-label="Category Breakdown">
+        <div class="cat-card">
+          <div class="cat-top">
+            <span class="cat-label">Travel</span>
+            <div class="cat-icon">🚌</div>
+          </div>
+          <div class="cat-val" id="catTravelVal">0.000</div>
+          <div class="cat-sub">kg CO₂e</div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-top">
+            <span class="cat-label">Electricity</span>
+            <div class="cat-icon">⚡</div>
+          </div>
+          <div class="cat-val" id="catElecVal">0.000</div>
+          <div class="cat-sub">kg CO₂e</div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-top">
+            <span class="cat-label">Food</span>
+            <div class="cat-icon">🥗</div>
+          </div>
+          <div class="cat-val" id="catFoodVal">0.000</div>
+          <div class="cat-sub">kg CO₂e</div>
+        </div>
+
+        <div class="cat-card">
+          <div class="cat-top">
+            <span class="cat-label">Waste</span>
+            <div class="cat-icon">♻️</div>
+          </div>
+          <div class="cat-val" id="catWasteVal">0.000</div>
+          <div class="cat-sub">kg CO₂e</div>
+        </div>
+      </section>
+
+      <!-- Live Activities Log -->
+      <section class="glass-card activity-section">
+        <div class="section-header">
+          <h3 class="section-title">
+            <span>📋</span> Logged Activities (Session Memory)
+          </h3>
+          <span class="act-meta" id="activityCountText">0 activities logged</span>
+        </div>
+
+        <div class="activity-feed" id="activityFeed">
+          <div class="empty-state" id="emptyActivityState">
+            No activities logged in this session yet.<br>
+            Try saying <em>"I travelled 12 km by bus"</em> or clicking a quick prompt below!
+          </div>
+        </div>
+      </section>
+
+    </section>
+
+    <!-- Right Column: Conversational Agent Chat -->
+    <section class="chat-panel" aria-label="Chat with Carbon Coach">
+      
+      <div class="chat-header">
+        <div class="chat-header-title">
+          <span id="chatTitleText">💬 Chat with Carbon Coach</span>
+        </div>
+        <div class="chat-header-actions">
+          <button type="button" class="audio-toggle-btn active" id="btnAudioToggle" title="Toggle voice audio reading for replies">
+            <span id="audioToggleLabel">🔊 Voice Reply:</span> <span id="audioToggleState">ON</span>
+          </button>
+          <span class="brand-badge" style="background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.3); color: #38bdf8;">
+            Zero Hallucination
+          </span>
+        </div>
+      </div>
+
+      <!-- Messages Stream -->
+      <div class="messages-stream" id="messagesStream">
+        <div class="message agent" id="initialWelcomeMessage">
+          <div class="msg-bubble" id="welcomeMsgBubble">
+            👋 <strong>Namaste! నమస్కారం!</strong> I am your <strong>Carbon Coach</strong>.<br>
+            మీరు తెలుగులో మాట్లాడవచ్చు లేదా టైప్ చేయవచ్చు (You can speak or type in <strong>Telugu</strong> or English)!<br>
+            Tell me about your travel, electricity, food, or waste—like <em>"నేను ఈరోజు 50 కిమీ బైక్ మీద ప్రయాణించాను"</em> or <em>"I travelled 12 km by bus"</em>—and I'll measure your emissions with zero-hallucination precision and suggest eco tips!
+          </div>
+          <div class="msg-time">Just now</div>
+        </div>
+      </div>
+
+      <!-- Quick Action Chips (Populated dynamically per language) -->
+      <div class="quick-chips-bar" id="quickChipsBar" aria-label="Quick Actions">
+        <!-- Rendered dynamically by app.js based on selected language -->
+      </div>
+
+      <!-- Voice Listening Status Banner (hidden by default) -->
+      <div class="voice-status-banner" id="voiceStatusBanner" style="display: none;">
+        <span class="voice-indicator-dot"></span>
+        <span id="voiceStatusText">మాట్లాడండి (Listening in Telugu)...</span>
+        <button type="button" class="btn-voice-cancel" id="btnVoiceCancel">రద్దు (Stop)</button>
+      </div>
+
+      <!-- Input Form -->
+      <form class="chat-input-container" id="chatForm">
+        <!-- Language selector -->
+        <div class="lang-select-wrapper" title="Select Voice Input Language">
+          <span class="lang-icon">🌐</span>
+          <select id="speechLangSelect" class="speech-lang-select" aria-label="Voice input language">
+            <option value="te-IN" selected>తెలుగు (Telugu)</option>
+            <option value="en-IN">English (India)</option>
+            <option value="hi-IN">हिंदी (Hindi)</option>
+          </select>
+        </div>
+
+        <input 
+          type="text" 
+          id="userInput" 
+          class="chat-input" 
+          placeholder="తెలుగులో చెప్పండి లేదా మైక్ వాడండి (e.g. 50 km బైక్, 4 hours AC)..."
+          autocomplete="off"
+        >
+
+        <!-- Mic speech-to-text button -->
+        <button type="button" class="btn-mic" id="btnMic" title="Click to speak in Telugu or English">
+          <span class="mic-icon">🎙️</span>
+        </button>
+
+        <button type="submit" class="btn-send" id="btnSend" title="Send message">
+          ➤
+        </button>
+      </form>
+
+    </section>
+
+  </main>
+
+  <!-- Campus Leaderboard Modal -->
+  <div class="modal-overlay" id="leaderboardModal">
+    <div class="modal-box">
+      <div class="modal-top">
+        <h3 class="modal-title"><span>🏆</span> Campus Eco Leaderboard</h3>
+        <button class="close-btn" id="btnCloseModal">&times;</button>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-muted);">
+        Rankings based on average daily carbon footprint per member (lower emissions = higher rank).
+      </p>
+
+      <div class="leaderboard-list" id="leaderboardList">
+        <div class="lb-row">
+          <span class="lb-rank">#1</span>
+          <span class="lb-name">Hostel 3 (Green House)</span>
+          <span class="lb-score">3.42 kg/day 🥇</span>
+        </div>
+        <div class="lb-row">
+          <span class="lb-rank">#2</span>
+          <span class="lb-name">Civil Engineering Dept</span>
+          <span class="lb-score">4.15 kg/day 🥈</span>
+        </div>
+        <div class="lb-row">
+          <span class="lb-rank">#3</span>
+          <span class="lb-name">Computer Science Dept</span>
+          <span class="lb-score">4.88 kg/day 🥉</span>
+        </div>
+        <div class="lb-row">
+          <span class="lb-rank">#4</span>
+          <span class="lb-name">Hostel 7</span>
+          <span class="lb-score">5.92 kg/day</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
